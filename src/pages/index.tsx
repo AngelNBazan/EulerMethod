@@ -50,7 +50,7 @@ export default function Home() {
         <div className="flex items-center justify-center my-4 sm:mb-8">
           <button className="border border-neutral-100 w-1/2 h-10 px-2" onClick={handleMath}>Evaluate</button>
         </div>
-      <div className="overflow-x-scroll w-full m-auto">
+      <div className="overflow-x-scroll w-full">
           {(yValues.length > 1) && 
           <DETable yValues={yValues} errorData={errorData} exactData={exactData} stepSize={stepSize} />
           }
