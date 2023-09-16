@@ -9,12 +9,12 @@ import UserInputFunction from "~/components/UserInputFunction";
 
 const globalFont = JetBrains_Mono({subsets: ['latin']})
 export default function Home() {
-  const [mathStr, setmathStr] = useState("")
-  const [y0, sety0] = useState("0")
-  const [numSteps, setnumSteps] = useState("0")
-  const [stepSize, setstepSize] = useState("0")
+  const [mathStr, setmathStr] = useState("4-t+2y")
+  const [y0, sety0] = useState("1")
+  const [numSteps, setnumSteps] = useState("10")
+  const [stepSize, setstepSize] = useState("0.1")
   const [yValues, setyValues] = useState<number[]>([])
-  const [exactFunc, setExactFunc] = useState("")
+  const [exactFunc, setExactFunc] = useState("-7/4+(1/2)t+(11/4)e^(2t)")
   const [exactData, setExactData] = useState<number[]>([])
 
 
@@ -25,7 +25,7 @@ export default function Home() {
     }
   }
   const errorData = percentErrorDiff(yValues, exactData)
-
+  
   return (
     <>
       <Head>
