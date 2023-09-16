@@ -73,11 +73,10 @@ const options = {
 interface DEChartProps {
   yValues: number[];
   exactData?: number[];
-  errorData?: number[];
   stepSize: string;
 }
 
-export default function DEChart({yValues, exactData, errorData, stepSize}:DEChartProps) {
+export default function DEChart({yValues, exactData, stepSize}:DEChartProps) {
   let data = {
     labels: yValues.map((_, index) => (index * parseFloat(stepSize)).toFixed(2)),  // Adjust the number of decimal places as needed
     datasets: [

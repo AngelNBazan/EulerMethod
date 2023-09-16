@@ -1,6 +1,12 @@
 import React from 'react'
 
-export default function UserInputFunction({labelTitle, value, setValue}) {
+interface UserInputProps{
+  labelTitle: string,
+  value: string,
+  setValue: any
+}
+
+export default function UserInputFunction({labelTitle, value, setValue}:UserInputProps) {
   return (
 	<div className='flex items-center flex-col sm:flex-row'>
 		<label className='text-neutral-100 text-sm p-2 sm:'>{labelTitle}</label>

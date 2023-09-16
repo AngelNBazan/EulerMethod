@@ -35,7 +35,7 @@ export default function Home() {
       </Head>
       <main className={`min-h-screen bg-neutral-950 text-neutral-100 ${globalFont.className} sm:p-8`}>
         <h1 className="text-xl sm:text-3xl text-center font-semibold p-8 sm:p-0 sm:pb-4">Differenital Equation: Euler's Method</h1>
-              {yValues.length > 1 && <DEChart yValues={yValues} exactData={exactData} errorData={errorData} stepSize={stepSize}/>}
+              {yValues.length > 1 && <DEChart yValues={yValues} exactData={exactData} stepSize={stepSize}/>}
 
         <div className="flex items-center justify-evenly sm:p-4">
           {/* Inputs from user */}
@@ -64,7 +64,7 @@ export default function Home() {
 }
 
 function getExactData(mathStr:string, numSteps:string, stepSize:string){
-  let arr:number[] = [];
+  const arr:number[] = [];
   for (let i = 0; i < parseFloat(numSteps)+1; i++) {
     arr.push(formatFloat(math.evaluate(mathStr,{t:i*parseFloat(stepSize)})))
   }
@@ -74,7 +74,7 @@ function getExactData(mathStr:string, numSteps:string, stepSize:string){
 function eulerMethod(mathStr:string, numSteps:string, stepSize:string, y0:string):number[]{
   let yN:number = parseFloat(y0);
   let f0:number;
-  let arr:number[] = [];
+  const arr:number[] = [];
   arr.push(parseFloat(y0));
   for (let i = 0; i < parseFloat(numSteps); i++) {
     f0 = parseFloat(math.evaluate(mathStr,{y:yN, t:((parseFloat(stepSize))*i)}))
@@ -87,7 +87,7 @@ function eulerMethod(mathStr:string, numSteps:string, stepSize:string, y0:string
 function percentErrorDiff(eulerData:number[], exactData:number[]){
   let arr = [];
   for (let i = 0; i < eulerData.length; i++) {
-    arr.push((eulerData[i]-exactData[i])/eulerData[i]) 
+    arr.push((eulerData[i]!-exactData[i]!)/eulerData[i]!) 
   }
   return arr;
 }
