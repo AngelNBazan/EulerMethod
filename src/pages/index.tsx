@@ -21,8 +21,11 @@ export default function Home() {
   const handleMath = () => {
     setyValues(eulerMethod(mathStr, numSteps, stepSize, y0));
     if(exactFunc){
+      console.log("EXACT FUNT");
       setExactData(getExactData(exactFunc, numSteps, stepSize))
     }
+    else
+      setExactData([])
   }
   const errorData = percentErrorDiff(yValues, exactData)
   
