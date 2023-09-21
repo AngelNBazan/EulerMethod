@@ -47,8 +47,8 @@ export default function Home() {
           <UserInput labelTitle={"N Steps: "} value={numSteps} setValue={setnumSteps}/>
         </div>
         <div className="flex items-center justify-evenly sm:p-4">
-          <UserInputFunction labelTitle={"dy/dy: "} value={mathStr} setValue={setmathStr}/>
-          <UserInputFunction labelTitle={"Exact dy/dx: "} value={exactFunc} setValue={setExactFunc}/>
+          <UserInputFunction labelTitle={"dy/dt: "} value={mathStr} setValue={setmathStr}/>
+          <UserInputFunction labelTitle={"Exact dy/dt: "} value={exactFunc} setValue={setExactFunc}/>
         </div>
         <div className="flex items-center justify-center my-4 sm:mb-8">
           <button className="border border-neutral-100 w-1/2 h-10 px-2" onClick={handleMath}>Evaluate</button>
