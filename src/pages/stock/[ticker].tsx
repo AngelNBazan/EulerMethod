@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import {
   Chart as ChartJS,
@@ -73,24 +73,44 @@ const options = {
 const stockHistoricalData = async (ticker: string) => {
   const stockPriceDataJSON = await fetch(`https://eulermethod.vercel.app/api/stockChart/${ticker}`)
   const data = await stockPriceDataJSON.json()
-  console.log(data);
+  return data;
 
-
-
+}
+interface IChart {
+  price: number,
+  date: Date
 }
 
 export default function Ticker() {
   const router = useRouter()
-  const ticker = (router.query.ticker);
+  const { ticker } = router.query.ticker
+  console.log(ticker);
 
+
+  const [data, setData] = useState([] as IChart[])
   useEffect(() => {
+    stockHistoricalData(ticker).then(res => setData(res))
   }, [])
-
-  let data = {
+  const dates = data.map((el) => el.date)
+  const prices = data.map((el) => el.price)
+  let chartData = {
+    labels: dates,
+    datasets: [
+      {
+        label: 'Date',
+        data: prices,
+        fill: false,
+        backgroundColor: '#1f70ff',
+        borderColor: '#0050e6',
+      },
+    ],
   };
 
-  stockHistoricalData(ticker as string)
+
+  stockHistoricalData(ticker)
   return (
-    <div className={`min-h-screen bg-neutral-950 text-neutral-100 font-mono sm:p-8`}>STOCK: {ticker}</div>
+    <div className={`min-h-screen bg-neutral-950 text-neutral-100 font-mono sm:p-8`}>STOCK: {ticker}
+
+    </div>
   )
 }
