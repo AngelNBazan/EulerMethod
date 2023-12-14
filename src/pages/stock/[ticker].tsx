@@ -78,13 +78,14 @@ interface IChart {
 export default function Ticker() {
   const router = useRouter()
   const { ticker, strike, exp, optiontype } = router.query
+
   console.log(ticker, strike, exp, optiontype);
 
 
   const [data, setData] = useState([] as IChart[])
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`https://eulermethod.vercel.app/api/stockChart/ticker?ticker=${ticker}&strike=${strike}&optiontype=${optiontype}&exp=${exp}`)
+      const response = await fetch(`http://localhost:3000/api/stockChart/ticker?ticker=${ticker}&strike=${strike}&optiontype=${optiontype}&exp=${exp}`)
       const newData = await response.json()
       setData(newData)
     }

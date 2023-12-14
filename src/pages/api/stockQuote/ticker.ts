@@ -1,15 +1,13 @@
 import yf from 'yahoo-finance2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function tickerAPI(
+export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	if (req.query != null)
-		console.log(req.off);
+	const { ticker, strike, optiontype, exp } = req.query
 
-	const results = await getChartData("AAPL", 190, 3, "call")
-
+	const results = await getCalc(ticker, strike, exp, optiontype)
 	res.status(200).json(results)
 }
 
@@ -53,8 +51,9 @@ function doubleFactorial(n: number) {
 	return val;
 }
 
-const getChartData = async (TICKER, STRIKE, EXP, OPTION_TYPE: 'call' | 'put') => {
+const getCalc = async (TICKER, STRIKE, EXP, OPTION_TYPE: 'call' | 'put') => {
 	const results = await yf.chart(TICKER, { period1: "2020-01-01" })
+	const price = await yf.quote(TICKER)
 	const data = results.quotes
 	let changeData: number[] = []
 	let average = 0;
@@ -73,14 +72,10 @@ const getChartData = async (TICKER, STRIKE, EXP, OPTION_TYPE: 'call' | 'put') =>
 	std = Math.sqrt(std / (changeData.length));
 	std = std * Math.sqrt(250);
 
-	let chartData = []
-	for (let i = 0; i < data.length; i++) {
-		const element = data[i]!.close;
-		chartData.push({
-			price: blackScholes(element, STRIKE, EXP / 365, std, 0.05, OPTION_TYPE),
-			date: data[i]!.date
-		});
+	let calc = {
+		price: blackScholes(price!.regularMarketPrice, STRIKE, EXP / 365, std, 0.05, OPTION_TYPE),
+		date: data[data.length - 1]?.date
 	}
 
-	return chartData;
+	return calc;
 }
