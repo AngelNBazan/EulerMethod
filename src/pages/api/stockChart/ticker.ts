@@ -1,15 +1,13 @@
 import yf from 'yahoo-finance2'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function tickerAPI(
+export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	if (req.query != null)
-		console.log(req.off);
+	console.log(req.query);
 
 	const results = await getChartData("AAPL", 190, 3, "call")
-
 	res.status(200).json(results)
 }
 

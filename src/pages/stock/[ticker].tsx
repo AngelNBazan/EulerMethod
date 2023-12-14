@@ -70,28 +70,27 @@ const options = {
   }
 };
 
-const stockHistoricalData = async (ticker: string) => {
-  const stockPriceDataJSON = await fetch(`https://eulermethod.vercel.app/api/stockChart/${ticker}`)
-  const data = await stockPriceDataJSON.json()
-  return data;
-
-}
 interface IChart {
   price: number,
-  date: Date
+  date: Date,
 }
 
 export default function Ticker() {
   const router = useRouter()
-  const { ticker } = router.query.ticker
-  console.log(ticker);
+  const { ticker, strike, exp, optiontype } = router.query
+  console.log(ticker, strike, exp, optiontype);
 
 
   const [data, setData] = useState([] as IChart[])
   useEffect(() => {
-    stockHistoricalData(ticker).then(res => setData(res))
+    const fetchData = async () => {
+      const response = await fetch(`http://localhost:3000/api/stockChart/ticker?ticker=${ticker}&strike=${strike}&optiontype=${optiontype}&exp=${exp}`)
+      const newData = await response.json()
+      setData(newData)
+    }
+    fetchData()
   }, [])
-  const dates = data.map((el) => el.date)
+  const dates = data.map((el) => el.date.toString().substring(0, 10));
   const prices = data.map((el) => el.price)
   let chartData = {
     labels: dates,
@@ -104,13 +103,9 @@ export default function Ticker() {
         borderColor: '#0050e6',
       },
     ],
-  };
+  }
 
-
-  stockHistoricalData(ticker)
   return (
-    <div className={`min-h-screen bg-neutral-950 text-neutral-100 font-mono sm:p-8`}>STOCK: {ticker}
-
-    </div>
+    <Line data={chartData} options={options}></Line>
   )
-}
+};
