@@ -52,7 +52,7 @@ function doubleFactorial(n: number) {
 }
 
 const getCalc = async (TICKER, STRIKE, EXP, OPTION_TYPE: 'call' | 'put') => {
-	const results = await yf.chart(TICKER, { period1: "2020-01-01" })
+	const results = await yf.chart(TICKER, { period1: "2022-01-01" })
 	const price = await yf.quote(TICKER)
 	const data = results.quotes
 	let changeData: number[] = []
