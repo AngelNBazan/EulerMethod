@@ -73,6 +73,7 @@ const getCalc = async (TICKER, STRIKE, EXP, OPTION_TYPE: 'call' | 'put') => {
 	std = std * Math.sqrt(250);
 
 	let calc = {
+		ticker: TICKER,
 		price: blackScholes(price!.regularMarketPrice, STRIKE, EXP / 365, std, 0.05, OPTION_TYPE),
 		date: data[data.length - 1]?.date
 	}
