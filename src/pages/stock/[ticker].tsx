@@ -69,8 +69,14 @@ const options = {
     }
   }
 };
+
 const stockHistoricalData = async (ticker: string) => {
-  fetch(`https://eulermethod.vercel.app/api/stockChart/${ticker}`)
+  const stockPriceDataJSON = await fetch(`http://localhost:3000/api/stockChart/${ticker}`)
+  const data = await stockPriceDataJSON.json()
+  console.log(data);
+
+
+
 }
 
 export default function Ticker() {

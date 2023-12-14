@@ -5,10 +5,80 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-
-	const { ticker } = req.query
-	const results = await yf.chart(ticker as string, { period1: "2020-01-01" })
-	console.log(results);
+	const { ticker, strike, exp, otype } = req.query;
+	const results = await getChartData("AAPL", 190, 3, "call")
 
 	res.status(200).json(results)
+}
+
+
+function blackScholes(s: number, k: number, t: number, v: number, r: number, ty: 'call' | 'put') {
+	const d1 = (Math.log(s / k) + (r + v * v / 2) * t) / (v * Math.sqrt(t));
+	const d2 = d1 - v * Math.sqrt(t);
+
+	if (ty === 'call') {
+		return s * stdNormCDF(d1) - k * Math.exp(-r * t) * stdNormCDF(d2);
+	} else {
+		return k * Math.exp(-r * t) * stdNormCDF(-d2) - s * stdNormCDF(-d1);
+	}
+}
+
+// Standard normal cumulative distribution function
+function stdNormCDF(x: number) {
+	let probability = 0;
+
+	if (x >= 8) {
+		probability = 1;
+	} else if (x <= -8) {
+		probability = 0;
+	} else {
+		for (let i = 0; i < 100; i++) {
+			probability += (Math.pow(x, 2 * i + 1) / doubleFactorial(2 * i + 1));
+		}
+		probability *= Math.pow(Math.E, -0.5 * Math.pow(x, 2));
+		probability /= Math.sqrt(2 * Math.PI);
+		probability += 0.5;
+	}
+	return probability;
+}
+
+// Double factorial function
+function doubleFactorial(n: number) {
+	let val = 1;
+	for (let i = n; i > 1; i -= 2) {
+		val *= i;
+	}
+	return val;
+}
+
+const getChartData = async (TICKER, STRIKE, EXP, OPTION_TYPE: 'call' | 'put') => {
+	const results = await yf.chart(TICKER, { period1: "2020-01-01" })
+	const data = results.quotes
+	let changeData: number[] = []
+	let average = 0;
+	for (let index = 0; index + 1 < data.length; index++) {
+		const element = data[index + 1]!.close;
+		const change = (((element - data[index].close) / data[index].close));
+
+		average += change
+		changeData.push(change)
+	}
+	average /= changeData.length
+	let std = 0;
+	for (let i = 0; i < changeData.length; i++) {
+		std += Math.pow(changeData[i]! - average, 2);
+	}
+	std = Math.sqrt(std / (changeData.length));
+	std = std * Math.sqrt(250);
+
+	let chartData = []
+	for (let i = 0; i < data.length; i++) {
+		const element = data[i]!.close;
+		chartData.push({
+			price: blackScholes(element, STRIKE, EXP / 365, std, 0.05, OPTION_TYPE),
+			date: data[i]!.date
+		});
+	}
+
+	return chartData;
 }
